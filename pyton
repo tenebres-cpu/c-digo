@@ -1,0 +1,52 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from numpy.polynomial import Polynomial
+
+# Dados
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([148143581, 145284185, 226885866, 431834585, 608783688])
+
+# Ajustes dos polinômios
+p2 = Polynomial.fit(x, y, 2).convert()  # 2º grau
+p3 = Polynomial.fit(x, y, 3).convert()  # 3º grau
+p4 = Polynomial.fit(x, y, 4).convert()  # 4º grau
+
+# Derivadas
+dp2 = p2.deriv()
+dp3 = p3.deriv()
+dp4 = p4.deriv()
+
+# Geração de pontos para gráfico
+x_plot = np.linspace(1, 5, 400)
+
+# Funções e derivadas
+y2 = p2(x_plot)
+dy2 = dp2(x_plot)
+
+y3 = p3(x_plot)
+dy3 = dp3(x_plot)
+
+y4 = p4(x_plot)
+dy4 = dp4(x_plot)
+
+# Plotando
+fig, axs = plt.subplots(3, 2, figsize=(16, 12))
+graus = [2, 3, 4]
+pols = [(p2, y2, dy2), (p3, y3, dy3), (p4, y4, dy4)]
+
+for i, (grau, (pol, yf, df)) in enumerate(zip(graus, pols)):
+    axs[i, 0].scatter(x, y, color='red', label='Dados')
+    axs[i, 0].plot(x_plot, yf, label=f'Função de {grau}º grau')
+    axs[i, 0].set_title(f'Função de {grau}º grau')
+    axs[i, 0].legend()
+    
+    axs[i, 1].plot(x_plot, df, color='green', label=f'Derivada de {grau}º grau')
+    axs[i, 1].axhline(0, color='black', linestyle='--')
+    axs[i, 1].set_title(f'Derivada da função de {grau}º grau')
+    axs[i, 1].legend()
+
+plt.tight_layout()
+plt.show()
+
+# Retornar equações dos polinômios
+(p2.convert().coef, p3.convert().coef, p4.convert().coef)
